@@ -1,0 +1,48 @@
+:root {
+  --bg: #07080b;
+  --surface: #12141a;
+  --surface-glass: rgba(18, 20, 26, 0.72);
+  --surface-inverted: #f8fafc;
+  --stroke: #222530;
+  --stroke-soft: rgba(255, 255, 255, 0.08);
+  --text: #f4f1ea;
+  --text-inverted: #12141a;
+  --muted: #9a958c;
+  --muted-inverted: #5c6570;
+  --accent: #d7b56d;
+  --accent-ink: #1a1408;
+  --danger: #e15b4c;
+  --ok: #7dcea0;
+  --radius-card: 16px;
+  --radius-nav: 22px;
+  --radius-chip: 999px;
+  --nav-offset: max(12px, env(safe-area-inset-bottom));
+  --font-ui: "Geist", "Avenir Next", "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", "ui-monospace", monospace;
+  --shadow-nav: 0 12px 40px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
+}
+
+[data-theme="oled"] {
+  --bg: #000000;
+  --surface: #000000;
+  --surface-glass: rgba(0, 0, 0, 0.82);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
