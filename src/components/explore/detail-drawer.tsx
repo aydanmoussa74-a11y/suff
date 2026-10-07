@@ -23,8 +23,8 @@ type TabId = (typeof TABS)[number]["id"];
 export function DetailDrawer({ post, missing = false }: DetailDrawerProps) {
   const open = Boolean(post) || missing;
   const titleId = useId();
-  const panelRef = useRef<HTMLDivElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -32,7 +32,7 @@ export function DetailDrawer({ post, missing = false }: DetailDrawerProps) {
   const [toast, setToast] = useState("");
   const [exportOpen, setExportOpen] = useState(false);
   const [activeFramework, setActiveFramework] = useState<Framework | null>(post?.snippets[0]?.framework ?? null);
-  const exportRef = useRef<HTMLDivElement>(null);
+  const exportRef = useRef<HTMLDivElement | null>(null);
 
   function close() {
     const params = new URLSearchParams(searchParams.toString());
@@ -216,7 +216,7 @@ function ExportMenu({
 }: {
   post: UiPost;
   open: boolean;
-  menuRef: RefObject<HTMLDivElement>;
+  menuRef: RefObject<HTMLDivElement | null>;
   activeFramework: Framework | null;
   onToggle: () => void;
   onClose: () => void;
