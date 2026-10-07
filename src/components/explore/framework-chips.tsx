@@ -33,10 +33,10 @@ export function FrameworkChips() {
               scroll={false}
               role="tab"
               aria-selected={selected}
-              className={`rounded-[var(--radius-chip)] border px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
+              className={`rounded-[var(--radius-chip)] border border-[0.5px] px-2.5 py-1 text-[12px] leading-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
                 selected
                   ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]"
-                  : "border-[var(--stroke)] bg-[var(--surface)] text-[var(--muted)]"
+                  : "border-white/15 bg-transparent text-[var(--muted)]"
               }`}
             >
               {chip.label}

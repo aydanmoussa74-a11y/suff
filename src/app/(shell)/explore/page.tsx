@@ -25,6 +25,10 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
 
   return (
     <section aria-label="Explore">
+      <header className="mb-3">
+        <h1 className="text-lg font-semibold text-[var(--text)]">Explore</h1>
+        <p className="text-xs text-[var(--muted)]">Visual screens only. Open a card for code.</p>
+      </header>
       <Suspense fallback={<div className="mb-4 h-9" />}>
         <FrameworkChips />
       </Suspense>

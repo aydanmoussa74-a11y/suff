@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BottomNav } from "@/components/shell/bottom-nav";
+import { FloatingNav } from "@/components/shell/floating-nav";
 import { TopBar } from "@/components/shell/top-bar";
 import { AuthModal } from "@/components/auth/auth-modal";
 
@@ -18,7 +18,7 @@ export default function ShellLayout({ children }: { children: React.ReactNode })
     <div className="min-h-dvh bg-[var(--bg)] text-[var(--text)]">
       <TopBar />
       <main className="mx-auto w-full max-w-lg px-4 pb-28 pt-4">{children}</main>
-      <BottomNav />
+      <FloatingNav />
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </div>
   );

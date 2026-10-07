@@ -8,7 +8,7 @@ export function TopBar() {
 
   return (
     <header className="sticky top-0 z-30 px-4 pt-[max(12px,env(safe-area-inset-top))]">
-      <div className="mx-auto flex h-14 max-w-lg items-center justify-between rounded-[var(--radius-nav)] border border-[var(--stroke)] bg-[var(--surface-glass)] px-3 backdrop-blur-xl">
+      <div className="mx-auto flex h-12 max-w-lg items-center justify-between rounded-full border border-white/10 bg-[var(--surface-glass)] px-2.5 shadow-[0_8px_24px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
         <a href="/explore" className="flex items-center gap-2 rounded-full px-2 py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]">
           <span aria-hidden className="grid h-7 w-7 place-items-center rounded-full bg-[var(--accent)] text-xs font-semibold text-[var(--accent-ink)]">
             S
