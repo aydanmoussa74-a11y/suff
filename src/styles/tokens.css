@@ -17,8 +17,8 @@
   --radius-nav: 22px;
   --radius-chip: 999px;
   --nav-offset: max(12px, env(safe-area-inset-bottom));
-  --font-ui: "Geist", "Avenir Next", "Segoe UI", sans-serif;
-  --font-mono: "Geist Mono", "ui-monospace", monospace;
+  --font-ui: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+  --font-mono: "Space Mono", "ui-monospace", monospace;
   --shadow-nav: 0 12px 40px rgba(0, 0, 0, 0.45);
   color-scheme: dark;
 }

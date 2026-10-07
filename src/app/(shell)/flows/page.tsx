@@ -1,8 +1,11 @@
 import { FlowCarousel } from "@/components/flows/flow-carousel";
-import { flowPosts } from "@/data/posts";
+import { posts as samplePosts } from "@/data/posts";
+import { fetchPosts } from "@/lib/supabase";
 
-export default function FlowsPage() {
-  const flows = flowPosts();
+export const dynamic = "force-dynamic";
+export default async function FlowsPage() {
+  const fetchedPosts = await fetchPosts();
+  const flows = (fetchedPosts ?? samplePosts).filter((post) => post.kind === "flow" && post.steps.length > 0);
 
   return (
     <section aria-label="Flows" className="space-y-8">

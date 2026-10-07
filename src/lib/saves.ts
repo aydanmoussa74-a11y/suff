@@ -1,24 +1,30 @@
-const KEY = "suff.saved";
+import { getSupabaseBrowserClient } from "@/lib/supabase";
 
-export function readSaves(): string[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed.filter((item) => typeof item === "string") : [];
-  } catch {
-    return [];
+export async function getSavedPostIds() {
+  const client = getSupabaseBrowserClient();
+  if (!client) return { ids: [] as string[], signedIn: false, configured: false };
+  const { data: { user }, error: userError } = await client.auth.getUser();
+  if (userError || !user) return { ids: [] as string[], signedIn: false, configured: true };
+  const { data, error } = await client.from("saved_posts").select("post_id").eq("user_id", user.id);
+  if (error) throw error;
+  return { ids: (data ?? []).map((row) => row.post_id), signedIn: true, configured: true };
+}
+
+export async function toggleSavedPost(postId: string) {
+  const client = getSupabaseBrowserClient();
+  if (!client) throw new Error("Supabase is not configured.");
+  const { data: { user }, error: userError } = await client.auth.getUser();
+  if (userError) throw userError;
+  if (!user) throw new Error("Sign in to save posts.");
+  const { data: existing, error: lookupError } = await client
+    .from("saved_posts").select("post_id").eq("user_id", user.id).eq("post_id", postId).maybeSingle();
+  if (lookupError) throw lookupError;
+  if (existing) {
+    const { error } = await client.from("saved_posts").delete().eq("user_id", user.id).eq("post_id", postId);
+    if (error) throw error;
+    return false;
   }
-}
-
-export function writeSaves(slugs: string[]) {
-  window.localStorage.setItem(KEY, JSON.stringify(slugs));
-  window.dispatchEvent(new Event("suff-saves"));
-}
-
-export function toggleSave(slug: string) {
-  const current = readSaves();
-  const next = current.includes(slug) ? current.filter((item) => item !== slug) : [slug, ...current];
-  writeSaves(next);
-  return next;
+  const { error } = await client.from("saved_posts").insert({ user_id: user.id, post_id: postId });
+  if (error) throw error;
+  return true;
 }

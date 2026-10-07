@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import type { UiPost } from "@/lib/types";
-import { readSaves, toggleSave } from "@/lib/saves";
+import { getSavedPostIds, toggleSavedPost } from "@/lib/saves";
+import { getSupabaseBrowserClient } from "@/lib/supabase";
 import { sharePost } from "@/lib/share";
 
 const LABELS: Record<string, string> = {
@@ -54,7 +55,7 @@ export function UiCard({ post, href }: UiCardProps) {
         <div className="flex shrink-0 items-center gap-2">
           <p className="text-xs text-[var(--muted)]">{post.likeCount}</p>
           <ShareIconButton slug={post.slug} title={post.title} />
-          <SaveToggle slug={post.slug} />
+          <SaveToggle postId={post.id} />
         </div>
       </div>
     </article>
@@ -94,31 +95,59 @@ function ShareIcon() {
   );
 }
 
-function SaveToggle({ slug }: { slug: string }) {
+function SaveToggle({ postId }: { postId: string }) {
   const [saved, setSaved] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
-    const sync = () => setSaved(readSaves().includes(slug));
-    sync();
-    window.addEventListener("suff-saves", sync);
-    window.addEventListener("storage", sync);
-    return () => {
-      window.removeEventListener("suff-saves", sync);
-      window.removeEventListener("storage", sync);
+    let mounted = true;
+    const sync = async () => {
+      try {
+        const result = await getSavedPostIds();
+        if (mounted) setSaved(result.ids.includes(postId));
+      } catch {
+        if (mounted) setSaved(false);
+      }
     };
-  }, [slug]);
+    void sync();
+    const client = getSupabaseBrowserClient();
+    const { data: listener } = client?.auth.onAuthStateChange(() => { window.setTimeout(() => { void sync(); }, 0); }) ?? { data: { subscription: null } };
+    return () => {
+      mounted = false;
+      listener?.subscription?.unsubscribe();
+    };
+  }, [postId]);
 
   return (
     <button
       type="button"
       aria-pressed={saved}
       aria-label={saved ? "Remove bookmark" : "Save bookmark"}
-      onClick={() => setSaved(toggleSave(slug).includes(slug))}
+      disabled={busy}
+      onClick={async () => {
+        setStatus("");
+        setBusy(true);
+        try {
+          setSaved(await toggleSavedPost(postId));
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Could not update saved posts.";
+          if (message.includes("Sign in")) {
+            setStatus("Sign in to save");
+            window.dispatchEvent(new Event("suff-auth"));
+          } else {
+            setStatus("Save unavailable");
+          }
+        } finally {
+          setBusy(false);
+          window.setTimeout(() => setStatus(""), 1800);
+        }
+      }}
       className={`rounded-full border px-2.5 py-1 text-[11px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)] ${
         saved ? "border-[var(--accent)] text-[var(--accent)]" : "border-[var(--stroke)] text-[var(--muted)]"
       }`}
     >
-      {saved ? "Saved" : "Save"}
+      {status || (busy ? "…" : saved ? "Saved" : "Save")}
     </button>
   );
 }
