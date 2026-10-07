@@ -216,7 +216,7 @@ function ExportMenu({
 }: {
   post: UiPost;
   open: boolean;
-  menuRef: RefObject<HTMLDivElement | null>;
+  menuRef: RefObject<HTMLDivElement>;
   activeFramework: Framework | null;
   onToggle: () => void;
   onClose: () => void;
