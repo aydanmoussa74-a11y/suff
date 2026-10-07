@@ -8,14 +8,16 @@ import { fetchPosts } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
+type Search = Record<string, string | string[] | undefined>;
+
 type ExplorePageProps = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Search | Promise<Search>;
 };
 
 export default async function ExplorePage({ searchParams }: ExplorePageProps) {
   const fetchedPosts = await fetchPosts();
   const source = fetchedPosts ?? posts;
-  const params = await searchParams;
+  const params = await Promise.resolve(searchParams);
   const raw = typeof params.framework === "string" ? params.framework : undefined;
   const framework = raw && isFramework(raw) ? raw : undefined;
   const screens = source.filter((post) => post.kind !== "flow");

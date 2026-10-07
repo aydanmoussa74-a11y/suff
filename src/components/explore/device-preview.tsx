@@ -163,23 +163,34 @@ export function FlowScreen({ stepId, title }: { stepId: string; title: string })
     <PhoneFrame>
       {stepId === "login" ? <SignInPreview accent={accent} /> : null}
       {stepId === "splash" ? <SplashPreview accent={accent} /> : null}
-      {stepId === "document" ? (
-        <div className="grid h-full place-items-center bg-[#07080b] p-4 text-center">
-          <div className="h-28 w-20 rounded-lg border border-dashed border-[var(--accent)]" />
-          <p className="mt-2 text-[10px] text-[var(--muted)]">Frame only</p>
-        </div>
-      ) : null}
-      {stepId === "face" ? (
-        <div className="grid h-full place-items-center bg-[#07080b]">
-          <span className="grid h-16 w-16 place-items-center rounded-full border border-[var(--accent)] text-[var(--accent)]">✓</span>
-        </div>
-      ) : null}
-      {stepId === "verified" ? (
-        <div className="grid h-full place-items-center bg-[#07080b] px-3 text-center">
-          <p className="text-sm font-semibold text-[var(--ok)]">{title}</p>
-        </div>
-      ) : null}
+      {stepId === "document" ? <VerifyPreview title="Document frame" /> : null}
+      {stepId === "face" ? <VerifyPreview title="Face check" /> : null}
+      {stepId === "verified" ? <SuccessPreview title={title} /> : null}
       {!["login", "splash", "document", "face", "verified"].includes(stepId) ? <SplashPreview accent={accent} /> : null}
     </PhoneFrame>
+  );
+}
+
+function VerifyPreview({ title }: { title: string }) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-3 bg-[#07080b] px-4 text-center">
+      <div className="grid h-28 w-20 place-items-center rounded-2xl border border-dashed border-[var(--accent)] bg-white/5">
+        <span className="h-10 w-10 rounded-full border border-[var(--accent)]" />
+      </div>
+      <p className="text-[11px] text-[var(--text)]">{title}</p>
+      <p className="text-[10px] text-[var(--muted)]">Sample frame. Nothing is captured.</p>
+    </div>
+  );
+}
+
+function SuccessPreview({ title }: { title: string }) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-3 bg-[#07080b] px-4 text-center">
+      <span className="grid h-12 w-12 place-items-center rounded-full bg-[var(--ok)] text-sm font-semibold text-[#102117]">✓</span>
+      <p className="text-sm font-semibold text-[var(--text)]">{title}</p>
+      <button type="button" className="rounded-full bg-[var(--accent)] px-3 py-1.5 text-[11px] font-semibold text-[#1a1408]">
+        Continue
+      </button>
+    </div>
   );
 }
